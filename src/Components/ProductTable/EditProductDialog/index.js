@@ -281,15 +281,6 @@ const EditProductDialog = ({
     }
   };
 
-  // Thêm hàm để convert File thành base64
-  const convertFileToBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = (error) => reject(error);
-    });
-  };
   const dialogStyle = {
     "& .MuiDialog-paper": {
       backgroundColor: isDarkMode ? "#1a2035" : "#fff",

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
+import React, { useState, useEffect, useCallback } from "react";
+import { FaEdit, FaTrash } from "react-icons/fa";
 import { fetchDataFromApi, deleteData } from "../../utils/api";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -28,11 +28,7 @@ const BrandList = () => {
   const [itemsPerPage] = useState(5);
   const [totalPages, setTotalPages] = useState(0);
 
-  useEffect(() => {
-    fetchBrands();
-  }, []);
-
-  const fetchBrands = async () => {
+  const fetchBrands = useCallback(async () => {
     try {
       setLoading(true);
       const data = await fetchDataFromApi("/api/brands");
@@ -44,7 +40,11 @@ const BrandList = () => {
       setLoading(false);
       console.error("Lỗi khi tải thương hiệu:", err);
     }
-  };
+  }, [itemsPerPage]);
+
+  useEffect(() => {
+    fetchBrands();
+  }, [fetchBrands]);
 
   const handlePageChange = (event, value) => {
     setPage(value);

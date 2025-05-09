@@ -2,11 +2,9 @@
 
 import axios from "axios";
 
-const API_URL = "https://bacola.onrender.com";
-
 // Create a base axios instance with consistent configuration
 export const apiClient = axios.create({
-  baseURL: "https://bacola.onrender.com",
+  baseURL: "http://localhost:4000",
   headers: {
     "Content-Type": "application/json",
   },

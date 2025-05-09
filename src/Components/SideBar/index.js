@@ -80,7 +80,7 @@ const MenuSection = ({ title, children }) => (
 const Sidebar = () => {
   const { isSidebarOpen } = useSidebar();
   const [newOrdersCount, setNewOrdersCount] = useState(0);
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [setAnchorEl] = useState(null);
   const navigate = useNavigate();
 
   const fetchNewOrdersCount = async () => {

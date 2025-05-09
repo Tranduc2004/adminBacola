@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { fetchDataFromApi, deleteData } from "../../utils/api";
@@ -33,11 +33,7 @@ const SliderList = () => {
   const [itemsPerPage] = useState(5);
   const [totalPages, setTotalPages] = useState(0);
 
-  useEffect(() => {
-    fetchSliders();
-  }, []);
-
-  const fetchSliders = async () => {
+  const fetchSliders = useCallback(async () => {
     try {
       setLoading(true);
       const data = await fetchDataFromApi("/api/sliders");
@@ -49,7 +45,11 @@ const SliderList = () => {
       setLoading(false);
       console.error("Lỗi khi tải slider:", err);
     }
-  };
+  }, [itemsPerPage]);
+
+  useEffect(() => {
+    fetchSliders();
+  }, [fetchSliders]);
 
   const handlePageChange = (event, value) => {
     setPage(value);

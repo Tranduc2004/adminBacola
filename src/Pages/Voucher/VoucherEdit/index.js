@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import Select from "react-select";
@@ -42,13 +42,7 @@ const VoucherEdit = () => {
     isActive: true,
   });
 
-  useEffect(() => {
-    fetchVoucher();
-    fetchProducts();
-    fetchCategories();
-  }, [id]);
-
-  const fetchVoucher = async () => {
+  const fetchVoucher = useCallback(async () => {
     try {
       const response = await getData(`/api/vouchers/${id}`);
       const voucher = response.data;
@@ -86,7 +80,13 @@ const VoucherEdit = () => {
       toast.error("Không thể lấy thông tin voucher");
       navigate("/voucher/voucher-list");
     }
-  };
+  }, [id, navigate]);
+
+  useEffect(() => {
+    fetchVoucher();
+    fetchProducts();
+    fetchCategories();
+  }, [id, fetchVoucher]);
 
   const fetchProducts = async () => {
     try {

@@ -31,7 +31,6 @@ import {
   Category as CategoryIcon,
   Business as BrandingIcon,
 } from "@mui/icons-material";
-import { useTheme } from "@mui/material/styles";
 import { useTheme as useCustomTheme } from "../../context/ThemeContext";
 import { viewData, getData, postData } from "../../utils/api";
 import axios from "axios";

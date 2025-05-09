@@ -3,8 +3,6 @@ import { Link } from "react-router-dom";
 import {
   Box,
   Typography,
-  Paper,
-  Grid,
   Button,
   Table,
   TableBody,
@@ -12,7 +10,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  useTheme,
   Chip,
 } from "@mui/material";
 import { useParams, useNavigate } from "react-router-dom";
@@ -26,7 +23,6 @@ const UserDetail = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const theme = useTheme();
 
   useEffect(() => {
     const fetchUserDetail = async () => {

@@ -43,11 +43,6 @@ const UserList = () => {
   const [totalUsers, setTotalUsers] = useState(0);
   const [roleFilter, setRoleFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
-  const [stats, setStats] = useState({
-    totalUsers: 0,
-    totalAdmins: 0,
-    totalActive: 0,
-  });
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
   const [confirmDialog, setConfirmDialog] = useState({
@@ -101,11 +96,7 @@ const UserList = () => {
     };
   }, []);
 
-  useEffect(() => {
-    fetchUsers();
-  }, [page, rowsPerPage, search, roleFilter, statusFilter]);
-
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     try {
       setLoading(true);
       const response = await fetchUsersApi(
@@ -117,22 +108,9 @@ const UserList = () => {
       if (response && response.data) {
         setUsers(response.data);
         setTotalUsers(response.pagination?.total || 0);
-        // Tính toán thống kê
-        const totalAdmins = response.data.filter(
-          (user) => user.role === "admin"
-        ).length;
-        const totalActive = response.data.filter(
-          (user) => user.isActive
-        ).length;
-        setStats({
-          totalUsers: response.pagination?.total || 0,
-          totalAdmins,
-          totalActive,
-        });
       } else {
         setUsers([]);
         setTotalUsers(0);
-        setStats({ totalUsers: 0, totalAdmins: 0, totalActive: 0 });
       }
     } catch (error) {
       console.error("Lỗi khi lấy danh sách users:", error);
@@ -140,7 +118,11 @@ const UserList = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, search, roleFilter, statusFilter]);
+
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
 
   const handleMenuClose = () => {
     setAnchorEl(null);

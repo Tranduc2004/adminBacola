@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { FaEdit, FaTrash, FaSearch } from "react-icons/fa";
+import { FaEdit, FaTrash } from "react-icons/fa";
 import { toast } from "react-toastify";
 import moment from "moment";
 import { getData, deleteData } from "../../../utils/api";

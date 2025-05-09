@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
+import React, { useState, useEffect, useCallback } from "react";
+import { FaEdit, FaTrash } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import Pagination from "@mui/material/Pagination";
@@ -27,11 +27,7 @@ const PostsList = () => {
   const [itemsPerPage] = useState(5);
   const [totalPages, setTotalPages] = useState(0);
 
-  useEffect(() => {
-    fetchPosts();
-  }, []);
-
-  const fetchPosts = async () => {
+  const fetchPosts = useCallback(async () => {
     try {
       setLoading(true);
       const response = await getData("/api/posts");
@@ -44,7 +40,11 @@ const PostsList = () => {
       console.error("Lỗi khi tải danh sách bài viết:", error);
       toast.error("Lỗi khi tải danh sách bài viết");
     }
-  };
+  }, [itemsPerPage]);
+
+  useEffect(() => {
+    fetchPosts();
+  }, [fetchPosts]);
 
   const handlePageChange = (event, value) => {
     setPage(value);

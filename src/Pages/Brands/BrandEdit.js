@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { fetchDataFromApi, editData } from "../../utils/api";
@@ -24,39 +24,39 @@ const BrandEdit = () => {
   const [imageSource, setImageSource] = useState("file"); // "file" hoặc "url"
   const [imageUrl, setImageUrl] = useState("");
 
-  useEffect(() => {
-    fetchBrandData();
-  }, [id]);
-
-  const fetchBrandData = async () => {
+  const fetchBrandData = useCallback(async () => {
     try {
-      setLoading(true);
-      const data = await fetchDataFromApi(`/api/brands/${id}`);
+      const response = await fetchDataFromApi(`/api/brands/${id}`);
       setFormData({
-        name: data.name || "",
-        logo: data.logo || "",
-        description: data.description || "",
-        website: data.website || "",
-        isActive: data.isActive !== undefined ? data.isActive : true,
+        name: response.name || "",
+        logo: response.logo || "",
+        description: response.description || "",
+        website: response.website || "",
+        isActive: response.isActive !== undefined ? response.isActive : true,
       });
-      setPreviewImage(data.logo || null);
-      setImageUrl(data.logo || "");
+      setPreviewImage(response.logo || null);
+      setImageUrl(response.logo || "");
       // Xác định nguồn ảnh dựa trên URL
       if (
-        data.logo &&
-        (data.logo.startsWith("http://") || data.logo.startsWith("https://"))
+        response.logo &&
+        (response.logo.startsWith("http://") ||
+          response.logo.startsWith("https://"))
       ) {
         setImageSource("url");
       } else {
         setImageSource("file");
       }
       setLoading(false);
-    } catch (err) {
-      setError("Không thể tải thông tin thương hiệu");
-      setLoading(false);
-      console.error("Lỗi khi tải thông tin thương hiệu:", err);
+    } catch (error) {
+      console.error("Lỗi khi lấy thông tin thương hiệu:", error);
+      toast.error("Không thể lấy thông tin thương hiệu");
+      navigate("/brands");
     }
-  };
+  }, [id, navigate]);
+
+  useEffect(() => {
+    fetchBrandData();
+  }, [fetchBrandData]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;

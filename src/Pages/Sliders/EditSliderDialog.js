@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { toast } from "react-toastify";
 import {
   Dialog,
@@ -12,7 +12,6 @@ import {
   Box,
   Switch,
   FormControlLabel,
-  IconButton,
 } from "@mui/material";
 import { editData, fetchDataFromApi } from "../../utils/api";
 import { useTheme } from "../../context/ThemeContext";
@@ -33,18 +32,7 @@ const EditSliderDialog = ({ open, onClose, sliderId, onSuccess }) => {
   const [imageSource, setImageSource] = useState("file");
   const [imageUrl, setImageUrl] = useState("");
 
-  useEffect(() => {
-    if (sliderId) fetchSliderData();
-  }, [sliderId]);
-
-  useEffect(() => {
-    if (open) {
-      setSelectedFile(null);
-      setImageUrl("");
-    }
-  }, [open]);
-
-  const fetchSliderData = async () => {
+  const fetchSliderData = useCallback(async () => {
     try {
       const data = await fetchDataFromApi(`/api/sliders/${sliderId}`);
       console.log("Fetched slider data:", data);
@@ -73,7 +61,18 @@ const EditSliderDialog = ({ open, onClose, sliderId, onSuccess }) => {
       setErrorMessage("Không thể tải dữ liệu slider");
       toast.error("Không thể tải dữ liệu slider");
     }
-  };
+  }, [sliderId]);
+
+  useEffect(() => {
+    if (sliderId) fetchSliderData();
+  }, [sliderId, fetchSliderData]);
+
+  useEffect(() => {
+    if (open) {
+      setSelectedFile(null);
+      setImageUrl("");
+    }
+  }, [open]);
 
   const handleInputChange = (e) => {
     const { name, value, checked, type } = e.target;

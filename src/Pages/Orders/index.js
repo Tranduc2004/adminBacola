@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Box,
   Typography,
-  Paper,
   Table,
   TableBody,
   TableCell,
@@ -31,7 +30,7 @@ import { useTheme } from "../../context/ThemeContext";
 import { Link } from "react-router-dom";
 const Orders = () => {
   const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [setLoading] = useState(true);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [openDetailDialog, setOpenDetailDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
@@ -39,11 +38,7 @@ const Orders = () => {
   const [statusNote, setStatusNote] = useState("");
   const { isDarkMode } = useTheme();
 
-  useEffect(() => {
-    fetchOrders();
-  }, []);
-
-  const fetchOrders = async () => {
+  const fetchOrders = useCallback(async () => {
     try {
       toast.loading("Đang tải danh sách đơn hàng...");
       const response = await fetchAllOrdersApi();
@@ -61,7 +56,11 @@ const Orders = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [setLoading]);
+
+  useEffect(() => {
+    fetchOrders();
+  }, [fetchOrders]);
 
   const handleStatusUpdate = async () => {
     try {

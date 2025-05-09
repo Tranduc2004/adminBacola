@@ -1,10 +1,9 @@
-import React from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { FaEdit, FaTrash, FaUpload } from "react-icons/fa";
 import "./styles.css";
 import Pagination from "@mui/material/Pagination";
 import { fetchDataFromApi, deleteData } from "../../utils/api";
 import { editData } from "../../utils/api";
-import { useState, useEffect } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -52,11 +51,7 @@ const CategoryList = () => {
     });
   };
 
-  useEffect(() => {
-    loadCategories();
-  }, []);
-
-  const loadCategories = () => {
+  const loadCategories = useCallback(() => {
     fetchDataFromApi("/api/categories")
       .then((res) => {
         const data = Array.isArray(res) ? res : [];
@@ -67,7 +62,11 @@ const CategoryList = () => {
       .catch((err) => {
         console.error("Error loading categories:", err);
       });
-  };
+  }, [itemsPerPage]);
+
+  useEffect(() => {
+    loadCategories();
+  }, [loadCategories]);
 
   const handlePageChange = (event, value) => {
     setPage(value);
