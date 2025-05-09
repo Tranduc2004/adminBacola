@@ -1,0 +1,100 @@
+.revenue-chart {
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 0 10px var(--shadow-color);
+  border: 1px solid var(--border-color);
+}
+
+.revenue-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.revenue-header h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.revenue-header select {
+  padding: 8px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+  outline: none;
+}
+
+.revenue-header select:focus {
+  border-color: var(--hover-text);
+}
+
+.revenue-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.metric {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.metric-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.metric-icon.invested {
+  background: #0858f7;
+}
+
+.metric-icon.earnings {
+  background: #2ecc71;
+}
+
+.metric-icon.expenses {
+  background: #be4bdb;
+}
+
+.metric-icon i {
+  font-size: 20px;
+}
+
+.metric-info span {
+  display: block;
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.metric-info h4 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.chart-container {
+  margin-top: 24px;
+  height: 300px;
+}
+
+@media (max-width: 768px) {
+  .revenue-metrics {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}

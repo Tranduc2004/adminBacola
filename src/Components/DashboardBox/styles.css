@@ -1,0 +1,74 @@
+.dashboard-box {
+  border-radius: 12px;
+  padding: 24px;
+  height: 100%;
+  min-height: 140px;
+  position: relative;
+  overflow: hidden;
+}
+
+.box-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  height: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.box-info {
+  flex: 1;
+}
+
+.box-title {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  text-transform: capitalize;
+}
+
+.box-value {
+  color: #fff;
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.box-change {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.box-icon {
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.box-icon svg {
+  color: #fff;
+  font-size: 24px;
+}
+
+/* Box Colors */
+.dashboard-box.green {
+  background: linear-gradient(45deg, #34c759, #2ecc71);
+}
+
+.dashboard-box.purple {
+  background: linear-gradient(45deg, #be4bdb, #9c27b0);
+}
+
+.dashboard-box.blue {
+  background: linear-gradient(45deg, #0858f7, #0645c7);
+}
+
+.dashboard-box.yellow {
+  background: linear-gradient(45deg, #ffd43b, #ffc107);
+}

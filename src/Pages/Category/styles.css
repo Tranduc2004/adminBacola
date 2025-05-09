@@ -1,0 +1,258 @@
+.category-table-container {
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 24px;
+  margin-top: 24px;
+  box-shadow: 0 0 10px var(--shadow-color);
+  border: 1px solid var(--border-color);
+}
+
+.table-header-section {
+  margin-bottom: 24px;
+}
+
+.table-header-section h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 20px;
+}
+
+.table-filters {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.filter-group label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.filter-group select,
+.filter-group input {
+  padding: 8px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 14px;
+  min-width: 150px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.filter-group select:focus,
+.filter-group input:focus {
+  border-color: var(--hover-text);
+  outline: none;
+}
+
+.search-input {
+  width: 250px;
+}
+
+/* Table Styles */
+.table-responsive {
+  overflow-x: auto;
+}
+
+.category-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.category-table th {
+  background: var(--hover-text);
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 12px 16px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.category-table td {
+  padding: 16px;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.category-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.category-info img {
+  width: 48px;
+  height: 48px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.category-name {
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.color-display {
+  width: 20px; /* Điều chỉnh kích thước theo ý muốn */
+  height: 20px; /* Điều chỉnh kích thước theo ý muốn */
+  border-radius: 4px; /* Để tạo hình vuông bo tròn, nếu muốn hình tròn thì 50% */
+  /* background-color: red;  Màu sẽ được đặt bởi style inline trong React */
+  display: inline-block; /* Để nó nằm trên cùng dòng với các phần tử khác */
+}
+.category-color {
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.original-price {
+  color: var(--text-secondary);
+  text-decoration: line-through;
+  margin-right: 8px;
+  font-size: 13px;
+}
+
+.sale-price {
+  color: var(--accent-red);
+  font-weight: 500;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.star-icon {
+  color: var(--accent-yellow);
+}
+
+.rating-count {
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+.action-buttons button {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: white; /* Màu biểu tượng */
+  transition: opacity 0.3s ease;
+}
+
+.view-btn {
+  background-color: #e6e0f5; /* Màu nền tím nhạt */
+}
+.view-btn svg {
+  color: #9932cc; /* Màu biểu tượng tím đậm */
+}
+.edit-btn {
+  background-color: #d1f2eb; /* Màu nền xanh lá nhạt */
+}
+.edit-btn svg {
+  color: #2e8b57; /* Màu biểu tượng xanh lá đậm */
+}
+.delete-btn {
+  background-color: #fcc9da; /* Màu nền hồng nhạt */
+}
+.delete-btn svg {
+  color: #d32f2f; /* Màu biểu tượng đỏ đậm */
+}
+
+.action-buttons button:hover {
+  opacity: 0.9;
+}
+
+/* Table Footer */
+.table-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-color);
+}
+
+.showing-info {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.pagination {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.page-btn,
+.prev-btn,
+.next-btn {
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--card-bg);
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.page-btn:hover,
+.prev-btn:hover,
+.next-btn:hover {
+  background: var(--hover-bg);
+  color: var(--hover-text);
+  border-color: var(--hover-text);
+}
+
+.page-btn.active {
+  background: var(--hover-text);
+  color: white;
+  border-color: var(--hover-text);
+}
+/* Add to your styles.css */
+.file-upload-container {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.image-preview {
+  margin: 15px 0;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.mt-2 {
+  margin-top: 10px;
+}
+
+.mb-2 {
+  margin-bottom: 10px;
+}
+
+.mt-3 {
+  margin-top: 15px;
+}
+
+.ml-2 {
+  margin-left: 10px;
+}
