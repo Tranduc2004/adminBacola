@@ -7,8 +7,11 @@ export const apiClient = axios.create({
   baseURL: "https://bacola.onrender.com",
   headers: {
     "Content-Type": "application/json",
+    Accept: "application/json",
+    "X-Requested-With": "XMLHttpRequest",
   },
   withCredentials: true,
+  timeout: 10000,
 });
 
 // Intercept requests to ensure token is always set from localStorage
@@ -18,6 +21,8 @@ apiClient.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    // Thêm origin header
+    config.headers["Origin"] = "https://adminbacola.netlify.app";
     return config;
   },
   (error) => Promise.reject(error)
