@@ -8,10 +8,9 @@ export const apiClient = axios.create({
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
-    "X-Requested-With": "XMLHttpRequest",
   },
   withCredentials: true,
-  timeout: 10000,
+  timeout: 30000, // Tăng timeout lên 30 giây
 });
 
 // Intercept requests to ensure token is always set from localStorage
@@ -21,18 +20,27 @@ apiClient.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-    // Thêm origin header
-    config.headers["Origin"] = "https://adminbacola.netlify.app";
     return config;
   },
   (error) => Promise.reject(error)
 );
 
-// Intercept responses to handle token expiration consistently
+// Intercept responses to handle errors
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response && error.response.status === 401) {
+    if (error.response) {
+      // Server trả về response với status code nằm ngoài range 2xx
+      console.error("Response error:", error.response.data);
+    } else if (error.request) {
+      // Request được gửi nhưng không nhận được response
+      console.error("Request error:", error.request);
+    } else {
+      // Có lỗi khi setting up request
+      console.error("Error:", error.message);
+    }
+
+    if (error.response?.status === 401) {
       const requestUrl = error.config.url;
       if (!requestUrl.includes("/login") && !requestUrl.includes("/register")) {
         localStorage.removeItem("admin_token");
