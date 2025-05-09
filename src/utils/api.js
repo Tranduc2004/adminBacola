@@ -4,10 +4,11 @@ import axios from "axios";
 
 // Create a base axios instance with consistent configuration
 export const apiClient = axios.create({
-  baseURL: "http://localhost:4000",
+  baseURL: "https://bacola.onrender.com",
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true,
 });
 
 // Intercept requests to ensure token is always set from localStorage
