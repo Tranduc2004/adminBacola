@@ -72,7 +72,6 @@ const EditProductDialog = ({
           fetchDataFromApi("/api/categories"),
           fetchDataFromApi("/api/brands"),
         ]);
-        console.log("Categories data:", categoriesData);
         if (Array.isArray(categoriesData)) {
           setProductCategories(
             categoriesData.map((cat) => ({

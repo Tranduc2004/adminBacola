@@ -58,11 +58,8 @@ const ProductView = () => {
     const fetchProduct = async () => {
       try {
         setLoading(true);
-        console.log("Gọi API với ID:", id);
-        console.log("ID từ URL:", id); // Kiểm tra ID
 
         const productData = await viewData("/products/", id);
-        console.log("Dữ liệu sản phẩm:", productData);
         setProduct(productData);
         setLoading(false);
       } catch (err) {

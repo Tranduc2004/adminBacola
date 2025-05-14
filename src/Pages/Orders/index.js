@@ -30,7 +30,7 @@ import { useTheme } from "../../context/ThemeContext";
 import { Link } from "react-router-dom";
 const Orders = () => {
   const [orders, setOrders] = useState([]);
-  const [setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [openDetailDialog, setOpenDetailDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
@@ -40,6 +40,7 @@ const Orders = () => {
 
   const fetchOrders = useCallback(async () => {
     try {
+      setLoading(true);
       toast.loading("Đang tải danh sách đơn hàng...");
       const response = await fetchAllOrdersApi();
       if (response.success) {
@@ -56,7 +57,7 @@ const Orders = () => {
     } finally {
       setLoading(false);
     }
-  }, [setLoading]);
+  }, []);
 
   useEffect(() => {
     fetchOrders();

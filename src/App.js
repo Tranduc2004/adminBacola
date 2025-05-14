@@ -31,6 +31,11 @@ import PostEdit from "./Pages/Posts/PostEdit";
 import VoucherList from "./Pages/Voucher/VoucherList";
 import VoucherAdd from "./Pages/Voucher/VoucherAdd";
 import VoucherEdit from "./Pages/Voucher/VoucherEdit";
+import Chat from "./Pages/Chat";
+import FooterDisplay from "./Pages/Footer/FooterDisplay";
+import FooterEdit from "./Pages/Footer/index";
+import ContactInfo from "./Pages/ContactInfo";
+import Feedbacks from "./Pages/Feedbacks";
 
 // Layout component bọc các components cần Header và Sidebar
 const Layout = ({ children }) => {
@@ -151,6 +156,11 @@ function App() {
                         path="voucher/voucher-edit/:id"
                         element={<VoucherEdit />}
                       />
+                      <Route path="/chat" element={<Chat />} />
+                      <Route path="/footer" element={<FooterDisplay />} />
+                      <Route path="/footer/edit" element={<FooterEdit />} />
+                      <Route path="/contact-info" element={<ContactInfo />} />
+                      <Route path="/feedbacks" element={<Feedbacks />} />
                     </Routes>
                   </Layout>
                 </PrivateRoute>

@@ -13,6 +13,8 @@ import { MdBrandingWatermark } from "react-icons/md";
 import { getNewOrdersCount } from "../../utils/api";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { IoChatboxEllipses } from "react-icons/io5";
+import { MdOutlineSettings } from "react-icons/md";
 
 const MenuItem = ({
   icon: Icon,
@@ -172,6 +174,10 @@ const Sidebar = () => {
           }
           onClick={handleOrdersClick}
         />
+        <MenuItem icon={IoChatboxEllipses} text="Chat" />
+        <MenuItem icon={IoChatboxEllipses} text="Contact-Info" />
+        <MenuItem icon={IoChatboxEllipses} text="Feedbacks" />
+        <MenuItem icon={TbLayoutDashboard} text="Footer" />
       </MenuSection>
       <MenuItem icon={TbLayoutDashboard} text="Register" />
       <div className="sidebar-wrapper">

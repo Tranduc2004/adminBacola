@@ -2,9 +2,16 @@ import React, { useState, useEffect } from "react";
 import { FaEye, FaEdit, FaTrash, FaStar } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import Pagination from "@mui/material/Pagination";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import Button from "@mui/material/Button";
 import { fetchDataFromApi, deleteData } from "../../utils/api";
 import EditProductDialog from "./EditProductDialog";
 import "./styles.css";
+import { toast } from "react-hot-toast";
 
 const ProductTable = () => {
   const [products, setProducts] = useState([]);
@@ -21,6 +28,11 @@ const ProductTable = () => {
   // Edit Dialog state
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+
+  const [deleteDialog, setDeleteDialog] = useState({
+    open: false,
+    productId: null,
+  });
 
   const navigate = useNavigate();
 
@@ -91,16 +103,35 @@ const ProductTable = () => {
   }, []);
 
   // Handle delete product
-  const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this product?")) {
-      try {
-        await deleteData("/api/products/", id);
-        fetchAllData(); // Refresh all data
-      } catch (err) {
-        console.error("Error deleting product:", err);
-        alert("Failed to delete product");
+  const handleDeleteClick = (id) => {
+    setDeleteDialog({
+      open: true,
+      productId: id,
+    });
+  };
+
+  const handleDeleteConfirm = async () => {
+    try {
+      await deleteData(`/api/products/${deleteDialog.productId}`);
+      await fetchAllData(); // Refresh data after successful deletion
+      toast.success("Xóa sản phẩm thành công");
+    } catch (err) {
+      console.error("Lỗi khi xóa sản phẩm:", err);
+      if (err.response?.status === 404) {
+        toast.error("Không tìm thấy sản phẩm để xóa");
+      } else if (err.response?.status === 401) {
+        toast.error("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+        navigate("/login");
+      } else {
+        toast.error("Không thể xóa sản phẩm. Vui lòng thử lại sau.");
       }
+    } finally {
+      setDeleteDialog({ open: false, productId: null });
     }
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteDialog({ open: false, productId: null });
   };
 
   // Handle open edit dialog
@@ -333,7 +364,7 @@ const ProductTable = () => {
                       </button>
                       <button
                         className="delete-btn"
-                        onClick={() => handleDelete(product._id)}
+                        onClick={() => handleDeleteClick(product._id)}
                         title="Delete product"
                       >
                         <FaTrash />
@@ -368,6 +399,28 @@ const ProductTable = () => {
           />
         </div>
       </div>
+
+      {/* Dialog xác nhận xóa */}
+      <Dialog
+        open={deleteDialog.open}
+        onClose={handleDeleteCancel}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Xác nhận xóa</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Bạn có chắc chắn muốn xóa sản phẩm này? Hành động này không thể hoàn
+            tác.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteCancel}>Hủy</Button>
+          <Button onClick={handleDeleteConfirm} color="error" autoFocus>
+            Xóa
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       {/* Edit Product Dialog */}
       <EditProductDialog

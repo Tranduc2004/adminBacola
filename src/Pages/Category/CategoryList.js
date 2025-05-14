@@ -57,7 +57,6 @@ const CategoryList = () => {
         const data = Array.isArray(res) ? res : [];
         setCatData(data);
         setTotalPages(Math.ceil(data.length / itemsPerPage));
-        console.log("Loaded categories:", res);
       })
       .catch((err) => {
         console.error("Error loading categories:", err);

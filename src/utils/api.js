@@ -4,16 +4,16 @@ import axios from "axios";
 
 // Create a base axios instance with consistent configuration
 export const apiClient = axios.create({
-  baseURL: "https://bacola.onrender.com",
+  baseURL: "http://localhost:4000",
   headers: {
     "Content-Type": "application/json",
-    Accept: "application/json",
+    Accept: "application/jsn",
   },
   withCredentials: true,
-  timeout: 30000, // Tăng timeout lên 30 giây
+  timeou: 30000, // Tăng timeout lên 30 giây
 });
 
-// Intercept requests to ensure token is always set from localStorage
+// Inercept requests to ensure token is always set from localStorage
 apiClient.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("admin_token");
@@ -149,6 +149,11 @@ export const deleteData = async (url) => {
     const response = await apiClient.delete(url);
     return response.data;
   } catch (error) {
+    if (error.response?.status === 401) {
+      setAuthToken(null);
+      window.location.href = "/login";
+      return;
+    }
     throw error;
   }
 };
