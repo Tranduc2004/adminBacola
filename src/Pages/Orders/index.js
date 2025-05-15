@@ -9,7 +9,6 @@ import {
   TableHead,
   TableRow,
   Chip,
-  IconButton,
   Button,
   Dialog,
   DialogTitle,
@@ -28,9 +27,10 @@ import { toast } from "react-hot-toast";
 import { fetchAllOrdersApi, editData } from "../../utils/api";
 import { useTheme } from "../../context/ThemeContext";
 import { Link } from "react-router-dom";
+
 const Orders = () => {
   const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [, setIsLoading] = useState(true);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [openDetailDialog, setOpenDetailDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
@@ -40,55 +40,79 @@ const Orders = () => {
 
   const fetchOrders = useCallback(async () => {
     try {
-      setLoading(true);
-      toast.loading("Đang tải danh sách đơn hàng...");
+      setIsLoading(true);
+      const loadingToast = toast.loading("Đang tải danh sách đơn hàng...");
+
       const response = await fetchAllOrdersApi();
+
       if (response.success) {
-        toast.dismiss();
+        toast.dismiss(loadingToast);
         setOrders(response.data);
       } else {
-        toast.dismiss();
+        toast.dismiss(loadingToast);
         toast.error("Không thể tải danh sách đơn hàng");
       }
     } catch (error) {
       console.error("Lỗi khi lấy danh sách đơn hàng:", error);
-      toast.dismiss();
       toast.error("Có lỗi xảy ra khi tải danh sách đơn hàng");
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   }, []);
 
   useEffect(() => {
     fetchOrders();
   }, [fetchOrders]);
-
+  // Hàm tính tổng tiền đã giảm cho đơn hàng
+  const getDiscountedTotal = (order) => {
+    if (!order.items || order.items.length === 0) return order.totalAmount;
+    let discountedTotal = 0;
+    order.items.forEach((item) => {
+      const price = item.price || item.product?.price || 0;
+      const discount =
+        typeof item.discount === "number"
+          ? item.discount
+          : item.product?.discount || 0;
+      const finalPrice = discount > 0 ? price * (1 - discount / 100) : price;
+      discountedTotal += finalPrice * item.quantity;
+    });
+    return Math.round(discountedTotal);
+  };
+  // Hàm tính giá cuối cùng sau khi áp dụng voucher
+  const getFinalAmount = (order) => {
+    const discountedTotal = getDiscountedTotal(order);
+    if (order.discountAmount && order.discountAmount > 0) {
+      return Math.round(discountedTotal - order.discountAmount);
+    }
+    return discountedTotal;
+  };
   const handleStatusUpdate = async () => {
+    if (!selectedOrder) return;
+
     try {
-      toast.loading("Đang cập nhật trạng thái...");
+      const loadingToast = toast.loading("Đang cập nhật trạng thái...");
+
       const response = await editData(
         `/api/admin/orders/${selectedOrder._id}/status`,
-        {
-          status: newStatus,
-          note: statusNote,
-        }
+        { status: newStatus, note: statusNote }
       );
+
       if (response.success) {
-        toast.dismiss();
+        toast.dismiss(loadingToast);
         toast.success("Cập nhật trạng thái đơn hàng thành công");
         setOpenEditDialog(false);
         fetchOrders();
       } else {
-        toast.dismiss();
-        toast.error("Không thể cập nhật trạng thái đơn hàng");
+        toast.dismiss(loadingToast);
+        toast.error(
+          response.message || "Không thể cập nhật trạng thái đơn hàng"
+        );
       }
     } catch (error) {
       console.error("Lỗi khi cập nhật trạng thái:", error);
-      toast.dismiss();
       toast.error("Có lỗi xảy ra khi cập nhật trạng thái");
     }
   };
-
   const getStatusColor = (status) => {
     switch (status) {
       case "PENDING":
@@ -106,6 +130,16 @@ const Orders = () => {
     }
   };
 
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleString("vi-VN", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
   const getStatusText = (status) => {
     switch (status) {
       case "PENDING":
@@ -121,42 +155,6 @@ const Orders = () => {
       default:
         return "Không xác định";
     }
-  };
-
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return new Intl.DateTimeFormat("vi-VN", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(date);
-  };
-
-  // Hàm tính tổng tiền đã giảm cho đơn hàng
-  const getDiscountedTotal = (order) => {
-    if (!order.items || order.items.length === 0) return order.totalAmount;
-    let discountedTotal = 0;
-    order.items.forEach((item) => {
-      const price = item.price || item.product?.price || 0;
-      const discount =
-        typeof item.discount === "number"
-          ? item.discount
-          : item.product?.discount || 0;
-      const finalPrice = discount > 0 ? price * (1 - discount / 100) : price;
-      discountedTotal += finalPrice * item.quantity;
-    });
-    return Math.round(discountedTotal);
-  };
-
-  // Hàm tính giá cuối cùng sau khi áp dụng voucher
-  const getFinalAmount = (order) => {
-    const discountedTotal = getDiscountedTotal(order);
-    if (order.discountAmount && order.discountAmount > 0) {
-      return Math.round(discountedTotal - order.discountAmount);
-    }
-    return discountedTotal;
   };
 
   return (
@@ -266,30 +264,32 @@ const Orders = () => {
                   </span>
                 </td>
                 <td>
-                  <IconButton
-                    onClick={() => {
-                      setSelectedOrder(order);
-                      setOpenDetailDialog(true);
-                    }}
-                    sx={{ color: isDarkMode ? "#fff" : "#1a1a1a" }}
-                    className="edit-btn"
-                    title="Xem chi tiết"
-                  >
-                    <Visibility />
-                  </IconButton>
-                  <IconButton
-                    onClick={() => {
-                      setSelectedOrder(order);
-                      setNewStatus(order.status);
-                      setStatusNote("");
-                      setOpenEditDialog(true);
-                    }}
-                    sx={{ color: isDarkMode ? "#fff" : "#1a1a1a" }}
-                    className="delete-btn"
-                    title="Cập nhật trạng thái"
-                  >
-                    <Edit />
-                  </IconButton>
+                  <div className="action-buttons">
+                    <button
+                      className="edit-btn"
+                      type="button"
+                      onClick={() => {
+                        setSelectedOrder(order);
+                        setOpenDetailDialog(true);
+                      }}
+                      title="Xem chi tiết"
+                    >
+                      <Visibility />
+                    </button>
+                    <button
+                      className="delete-btn"
+                      type="button"
+                      onClick={() => {
+                        setSelectedOrder(order);
+                        setNewStatus(order.status);
+                        setStatusNote("");
+                        setOpenEditDialog(true);
+                      }}
+                      title="Cập nhật trạng thái"
+                    >
+                      <Edit />
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}

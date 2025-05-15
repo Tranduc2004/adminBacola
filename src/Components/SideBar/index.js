@@ -14,7 +14,6 @@ import { getNewOrdersCount } from "../../utils/api";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { IoChatboxEllipses } from "react-icons/io5";
-import { MdOutlineSettings } from "react-icons/md";
 
 const MenuItem = ({
   icon: Icon,

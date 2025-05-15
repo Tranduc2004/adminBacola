@@ -10,7 +10,6 @@ import {
   IconButton,
   List,
   ListItem,
-  ListItemText,
   ListItemSecondaryAction,
   Divider,
 } from "@mui/material";

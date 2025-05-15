@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Box,
@@ -13,11 +13,9 @@ import {
   Paper,
   CircularProgress,
   Badge,
-  Divider,
   InputAdornment,
   Tooltip,
   Fade,
-  useTheme,
 } from "@mui/material";
 import {
   Send as SendIcon,
@@ -107,42 +105,41 @@ const Chat = () => {
   };
 
   // Lấy tin nhắn với user được chọn
-  const fetchMessages = async (userId) => {
-    if (!adminId) {
-      return;
-    }
-
-    try {
-      setLoading(true);
-      const response = await getData("/api/messages/admin");
-      if (response.success) {
-        const filteredMessages = response.data.filter((msg) => {
-          const senderId =
-            msg.sender && msg.sender._id
-              ? String(msg.sender._id)
-              : String(msg.sender);
-          const receiverId =
-            msg.receiver && msg.receiver._id
-              ? String(msg.receiver._id)
-              : String(msg.receiver);
-
-          const senderRole = msg.sender?.role || msg.senderType;
-          const receiverRole = msg.receiver?.role || msg.receiverType;
-
-          const isAdminToUser =
-            (senderId === String(adminId) && receiverId === String(userId)) ||
-            (receiverId === String(adminId) && senderId === String(userId));
-
-          return isAdminToUser;
-        });
-        setMessages(filteredMessages);
+  const fetchMessages = useCallback(
+    async (userId) => {
+      if (!adminId) {
+        return;
       }
-    } catch (error) {
-      toast.error("Không thể lấy tin nhắn");
-    } finally {
-      setLoading(false);
-    }
-  };
+
+      try {
+        setLoading(true);
+        const response = await getData("/api/messages/admin");
+        if (response.success) {
+          const filteredMessages = response.data.filter((msg) => {
+            const senderId =
+              msg.sender && msg.sender._id
+                ? String(msg.sender._id)
+                : String(msg.sender);
+            const receiverId =
+              msg.receiver && msg.receiver._id
+                ? String(msg.receiver._id)
+                : String(msg.receiver);
+            const isAdminToUser =
+              (senderId === String(adminId) && receiverId === String(userId)) ||
+              (receiverId === String(adminId) && senderId === String(userId));
+
+            return isAdminToUser;
+          });
+          setMessages(filteredMessages);
+        }
+      } catch (error) {
+        toast.error("Không thể lấy tin nhắn");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [adminId]
+  ); // Add adminId as dependency here
 
   // Gửi tin nhắn mới
   const sendMessage = async () => {
@@ -230,7 +227,7 @@ const Chat = () => {
     if (selectedUser) {
       fetchMessages(selectedUser._id);
     }
-  }, [selectedUser]);
+  }, [selectedUser, fetchMessages]); // Add fetchMessages to dependencies
 
   useEffect(() => {
     scrollToBottom();

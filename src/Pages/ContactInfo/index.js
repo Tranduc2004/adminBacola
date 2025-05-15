@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { apiClient, checkToken } from "../../utils/api";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -18,17 +18,15 @@ const ContactInfo = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
 
-  useEffect(() => {
-    // Kiểm tra token trước khi fetch data
+  // Use useCallback to memoize the fetchContactInfo function
+  const fetchContactInfo = useCallback(async () => {
+    // Avoid fetching if no token
     if (!checkToken()) {
       toast.error("Vui lòng đăng nhập để tiếp tục!");
       navigate("/login");
       return;
     }
-    fetchContactInfo();
-  }, [navigate]);
 
-  const fetchContactInfo = async () => {
     setLoading(true);
     try {
       const response = await apiClient.get("/api/about/contact-info");
@@ -63,7 +61,11 @@ const ContactInfo = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [navigate]); // navigate is a stable reference provided by react-router-dom
+
+  useEffect(() => {
+    fetchContactInfo();
+  }, [fetchContactInfo]); // Now we can safely include fetchContactInfo in dependencies
 
   const handleChange = (e) => {
     const { name, value } = e.target;
