@@ -79,10 +79,36 @@ const MenuSection = ({ title, children }) => (
 );
 
 const Sidebar = () => {
-  const { isSidebarOpen } = useSidebar();
+  const { isSidebarOpen, toggleSidebar } = useSidebar();
   const [newOrdersCount, setNewOrdersCount] = useState(0);
   const [setAnchorEl] = useState(null);
   const navigate = useNavigate();
+
+  // Thêm useEffect để xử lý click outside trên mobile
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      const sidebar = document.querySelector(".sidebar");
+      const menuButton = document.querySelector(".menu-button");
+
+      if (
+        isSidebarOpen &&
+        sidebar &&
+        !sidebar.contains(event.target) &&
+        menuButton &&
+        !menuButton.contains(event.target)
+      ) {
+        toggleSidebar();
+      }
+    };
+
+    if (window.innerWidth <= 768) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isSidebarOpen, toggleSidebar]);
 
   const fetchNewOrdersCount = async () => {
     try {
@@ -129,80 +155,140 @@ const Sidebar = () => {
     }
   };
   return (
-    <div className={`sidebar ${isSidebarOpen ? "" : "collapsed"}`}>
-      <MenuSection title="MAIN PAGES">
-        <MenuItem icon={TbLayoutDashboard} text="Dashboard" />
-        <MenuItem icon={IoBag} text="Products" isDropdown>
-          <SubMenuItem text="Product List" prefix="products" />
-          <SubMenuItem text="Product Upload" prefix="products" />
-        </MenuItem>
-
-        <MenuItem icon={BiSolidCategory} text="Category" isDropdown>
-          <SubMenuItem text="Category List" prefix="category" />
-          <SubMenuItem text="Category Add" prefix="category" />
-        </MenuItem>
-
-        <MenuItem icon={MdBrandingWatermark} text="Brands" isDropdown>
-          <SubMenuItem text="Brand List" prefix="brands" />
-          <SubMenuItem text="Brand Add" prefix="brands" />
-        </MenuItem>
-        <MenuItem icon={BiPackage} text="Sliders" isDropdown>
-          <SubMenuItem text="Slider List" prefix="sliders" />
-          <SubMenuItem text="Slider Add" prefix="sliders" />
-        </MenuItem>
-        <MenuItem icon={MdBrandingWatermark} text="Voucher" isDropdown>
-          <SubMenuItem text="Voucher List" prefix="voucher" />
-          <SubMenuItem text="Voucher Add" prefix="voucher" />
-        </MenuItem>
-        <MenuItem
-          icon={FaRegUser}
-          text="Users"
-          badge={{ type: "hot", text: "HOT" }}
+    <>
+      {/* Overlay cho mobile */}
+      {isSidebarOpen && window.innerWidth <= 768 && (
+        <div
+          className="sidebar-overlay"
+          onClick={toggleSidebar}
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            zIndex: 1000,
+          }}
         />
-        <MenuItem icon={RiBillLine} text="Posts" isDropdown>
-          <SubMenuItem text="Posts List" prefix="posts" />
-          <SubMenuItem text="Posts Add" prefix="posts" />
-        </MenuItem>
-        <MenuItem
-          icon={BsCart3}
-          text="Orders"
-          badge={
-            newOrdersCount > 0
-              ? { type: "count", text: newOrdersCount.toString() }
-              : null
-          }
-          onClick={handleOrdersClick}
-        />
-        <MenuItem icon={IoChatboxEllipses} text="Chat" />
-        <MenuItem icon={IoChatboxEllipses} text="Contact-Info" />
-        <MenuItem icon={IoChatboxEllipses} text="Feedbacks" />
-        <MenuItem icon={TbLayoutDashboard} text="Footer" />
-      </MenuSection>
-      <MenuItem icon={TbLayoutDashboard} text="Register" />
-      <div className="sidebar-wrapper">
-        <div className="sidebar-footer">
-          <button className="logout-btn" onClick={handleLogout}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="lock-icon"
-            >
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-              <path d="M7 11V7a5 5 0 0110 0v4"></path>
-            </svg>
-            LOGOUT
-          </button>
+      )}
+      <div
+        className={`sidebar ${isSidebarOpen ? "open" : "collapsed"}`}
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          height: "100vh",
+          zIndex: 1001,
+          transition: "transform 0.3s ease-in-out",
+          transform: isSidebarOpen ? "translateX(0)" : "translateX(-100%)",
+          width: "280px",
+          backgroundColor: "var(--sidebar-bg)",
+          boxShadow: "2px 0 5px rgba(0, 0, 0, 0.1)",
+        }}
+      >
+        <MenuSection title="MAIN PAGES">
+          <MenuItem icon={TbLayoutDashboard} text="Dashboard" />
+          <MenuItem icon={IoBag} text="Products" isDropdown>
+            <SubMenuItem text="Product List" prefix="products" />
+            <SubMenuItem text="Product Upload" prefix="products" />
+          </MenuItem>
+
+          <MenuItem icon={BiSolidCategory} text="Category" isDropdown>
+            <SubMenuItem text="Category List" prefix="category" />
+            <SubMenuItem text="Category Add" prefix="category" />
+          </MenuItem>
+
+          <MenuItem icon={MdBrandingWatermark} text="Brands" isDropdown>
+            <SubMenuItem text="Brand List" prefix="brands" />
+            <SubMenuItem text="Brand Add" prefix="brands" />
+          </MenuItem>
+          <MenuItem icon={BiPackage} text="Sliders" isDropdown>
+            <SubMenuItem text="Slider List" prefix="sliders" />
+            <SubMenuItem text="Slider Add" prefix="sliders" />
+          </MenuItem>
+          <MenuItem icon={MdBrandingWatermark} text="Voucher" isDropdown>
+            <SubMenuItem text="Voucher List" prefix="voucher" />
+            <SubMenuItem text="Voucher Add" prefix="voucher" />
+          </MenuItem>
+          <MenuItem
+            icon={FaRegUser}
+            text="Users"
+            badge={{ type: "hot", text: "HOT" }}
+          />
+          <MenuItem icon={RiBillLine} text="Posts" isDropdown>
+            <SubMenuItem text="Posts List" prefix="posts" />
+            <SubMenuItem text="Posts Add" prefix="posts" />
+          </MenuItem>
+          <MenuItem
+            icon={BsCart3}
+            text="Orders"
+            badge={
+              newOrdersCount > 0
+                ? { type: "count", text: newOrdersCount.toString() }
+                : null
+            }
+            onClick={handleOrdersClick}
+          />
+          <MenuItem icon={IoChatboxEllipses} text="Chat" />
+          <MenuItem icon={IoChatboxEllipses} text="Contact-Info" />
+          <MenuItem icon={IoChatboxEllipses} text="Feedbacks" />
+          <MenuItem icon={TbLayoutDashboard} text="Footer" />
+        </MenuSection>
+        <MenuItem icon={TbLayoutDashboard} text="Register" />
+        <div className="sidebar-wrapper">
+          <div className="sidebar-footer">
+            <button className="logout-btn" onClick={handleLogout}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="lock-icon"
+              >
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0110 0v4"></path>
+              </svg>
+              LOGOUT
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
+
+// Thêm CSS cho mobile
+const styles = `
+  @media (max-width: 768px) {
+    .sidebar {
+      width: 280px !important;
+    }
+    
+    .sidebar.collapsed {
+      transform: translateX(-100%);
+    }
+    
+    .sidebar.open {
+      transform: translateX(0);
+    }
+    
+    .content {
+      margin-left: 0 !important;
+      width: 100% !important;
+    }
+  }
+`;
+
+// Thêm style tag vào component
+const styleSheet = document.createElement("style");
+styleSheet.type = "text/css";
+styleSheet.innerText = styles;
+document.head.appendChild(styleSheet);
 
 export default Sidebar;
