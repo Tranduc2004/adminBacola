@@ -199,24 +199,51 @@ header button.rounded-circle svg {
 
 @media (max-width: 768px) {
   header {
-    height: auto;
-    padding: 15px 0;
+    flex-direction: row !important;
+    align-items: center !important;
+    height: auto !important;
+    padding: 10px 0 !important;
   }
-  .searchBox {
-    width: 200px;
+  header .row,
+  header .align-items-center {
+    flex-direction: row !important;
+    align-items: center !important;
+    width: 100%;
+    height: auto !important;
   }
-  header .logo span {
-    font-size: 24px;
+  .part2 {
+    flex: 1 1 100%;
+    margin-bottom: 0 !important;
+    margin-top: 8px;
   }
-  header .logo img {
-    width: 35px;
+  .part3 {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    gap: 8px;
+    justify-content: flex-start !important;
+    align-items: center !important;
+    margin-bottom: 0 !important;
+    margin-top: 8px;
   }
-  header button.rounded-circle {
-    min-width: 35px;
-    min-height: 35px;
+  .part3 > * {
+    margin-right: 8px !important;
+    margin-bottom: 0 !important;
   }
-  header button.rounded-circle svg {
-    font-size: 16px !important;
+  .theme-toggle-btn,
+  .mobile-search-btn,
+  .cart-menu,
+  .email-menu,
+  .notifications-menu,
+  .user-menu {
+    font-size: 18px !important;
+    min-width: 32px !important;
+    min-height: 32px !important;
+  }
+  .search-overlay {
+    top: 60px !important;
   }
 }
 
@@ -225,10 +252,12 @@ header button.rounded-circle svg {
     display: none !important;
   }
   .mobile-search-btn {
-    display: block;
+    display: block !important;
   }
   .part3 {
     order: 2;
+    flex-wrap: wrap !important;
+    gap: 6px;
   }
   .searchBox {
     width: 100%;
@@ -256,12 +285,12 @@ header button.rounded-circle svg {
 
 @media (max-width: 400px) {
   .searchBox {
-    max-width: 250px;
+    max-width: 220px;
   }
   header button.rounded-circle {
-    min-width: 30px;
-    min-height: 30px;
-    margin-right: 5px !important;
+    min-width: 28px;
+    min-height: 28px;
+    margin-right: 4px !important;
   }
 }
 
