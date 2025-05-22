@@ -25,7 +25,7 @@ const Dashboard = () => {
       try {
         const token = localStorage.getItem("admin_token");
         const response = await axios.get(
-          "http://localhost:4000/api/admin/dashboard-stats",
+          "https://bacola.onrender.com/api/admin/dashboard-stats",
           {
             headers: { Authorization: `Bearer ${token}` },
           }
